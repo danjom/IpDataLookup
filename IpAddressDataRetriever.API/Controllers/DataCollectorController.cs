@@ -1,14 +1,10 @@
 ﻿using IpAddressDataRetriever.API.Handlers;
 using IpAddressDataRetriever.API.Models.POCO;
 using IpAddressDataRetriever.Services.DataRetrievers;
-using IpAddressDataRetriever.Services.DataRetrivers;
-using IpAddressDataRetriever.Services.DataRetrivers.Implementation;
-using IpAddressDataRetriever.Services.Values;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,9 +40,7 @@ namespace IpAddressDataRetriever.API.Controllers
 
             List<RequestChunk> requestChuncks = LoadBalancer.SplitServices(services.ToList(), 3, true);
 
-
-            DataRetrieverOrchestrator dataRetrieverOrchestrator = new DataRetrieverOrchestrator();
-            JObject response = await dataRetrieverOrchestrator.OrquestrateRetrieval(services.ToList(), hostName);
+            JObject response = await DataRetrieverOrchestrator.OrquestrateRetrieval(services.ToList(), hostName);
 
 
             return Ok(response);

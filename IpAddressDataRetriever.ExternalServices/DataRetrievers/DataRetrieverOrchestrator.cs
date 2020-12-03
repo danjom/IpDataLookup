@@ -2,14 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace IpAddressDataRetriever.Services.DataRetrievers
 {
-    public class DataRetrieverOrchestrator
+    public static class DataRetrieverOrchestrator
     {
-        public async Task<JObject> OrquestrateRetrieval(List<string> serviceNames, string ipOrDomain)
+        public static async Task<JObject> OrquestrateRetrieval(List<string> serviceNames, string ipOrDomain)
         {
             JObject requestedData = new JObject();
 
