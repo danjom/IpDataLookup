@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using IpAddressDataRetriever.Services.DataRetrivers.Abstraction;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation

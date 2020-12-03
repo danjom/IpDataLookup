@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IpAddressDataRetriever.Services.DataRetrivers
+namespace IpAddressDataRetriever.Services.DataRetrivers.Abstraction
 {
     public abstract class APIDataRetriever : IDataRetriever
     {

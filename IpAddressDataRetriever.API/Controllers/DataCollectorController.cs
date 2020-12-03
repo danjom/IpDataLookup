@@ -5,6 +5,7 @@ using IpAddressDataRetriever.Services.Values;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,23 +33,18 @@ namespace IpAddressDataRetriever.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<WeatherForecast>> GetAsync()
+        public async Task<IActionResult> GetAsync()
         {
             string hostName = "swimlane.com";
             string ipAddress = "31.13.67.35";
 
-            DataRetrievingHandler retrievingHandler = new DataRetrievingHandler();
-            await retrievingHandler.RetrieveData(hostName, DataServices.GeoIp);
-            await retrievingHandler.RetrieveData(ipAddress, DataServices.GeoIp);
+            string[] services = { "DomainAvailability", "GeoIp", "IpAddress" };
 
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            DataRetrieverOrchestrator dataRetrieverOrchestrator = new DataRetrieverOrchestrator();
+            JObject response = await dataRetrieverOrchestrator.OrquestrateRetrieval(services.ToList(), hostName);
+
+
+            return Ok(response);
         }
     }
 }
