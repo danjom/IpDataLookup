@@ -1,4 +1,6 @@
-﻿using IpAddressDataRetriever.Services.DataRetrievers;
+﻿using IpAddressDataRetriever.API.Handlers;
+using IpAddressDataRetriever.API.Models.POCO;
+using IpAddressDataRetriever.Services.DataRetrievers;
 using IpAddressDataRetriever.Services.DataRetrivers;
 using IpAddressDataRetriever.Services.DataRetrivers.Implementation;
 using IpAddressDataRetriever.Services.Values;
@@ -38,7 +40,10 @@ namespace IpAddressDataRetriever.API.Controllers
             string hostName = "swimlane.com";
             string ipAddress = "31.13.67.35";
 
-            string[] services = { "DomainAvailability", "GeoIp", "IpAddress" };
+            string[] services = { "DomainAvailability", "GeoIp", "IpAddress", "WhoIs", "Ping", "DNSLookup" };
+
+            List<RequestChunk> requestChuncks = LoadBalancer.SplitServices(services.ToList(), 3, true);
+
 
             DataRetrieverOrchestrator dataRetrieverOrchestrator = new DataRetrieverOrchestrator();
             JObject response = await dataRetrieverOrchestrator.OrquestrateRetrieval(services.ToList(), hostName);
