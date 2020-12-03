@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IpAddressDataRetriever.Services.DataRetrivers
 {
-    public abstract class APIDataRetriever : IDataInspector
+    public abstract class APIDataRetriever : IDataRetriever
     {
         private readonly string endpointUrl;
 

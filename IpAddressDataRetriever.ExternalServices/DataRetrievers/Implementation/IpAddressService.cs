@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
 {
-    public class IpAddressService : IDataInspector
+    public class IpAddressService : IDataRetriever
     {
         public async Task<JObject> RetrieveDataAsync(string ipAddress)
         {

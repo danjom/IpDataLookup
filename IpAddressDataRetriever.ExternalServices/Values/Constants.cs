@@ -13,4 +13,16 @@ namespace IpAddressDataRetriever.Services.Values
         public const int IpAddressv6 = 2;
         public const int DomainName = 3;
     }
+
+    public static class DataServices
+    {
+        public const string DNSLookup = "DNSLookup";
+        public const string DomainAvailability = "DomainAvailability";
+        public const string GeoIp = "GeoIp";
+        public const string IpAddress = "IpAddress";
+        public const string Ping = "Ping";
+        public const string ReverseDNSLookup = "ReverseDNSLookup";
+        public const string WhoIs = "WhoIs";
+    }
+
 }

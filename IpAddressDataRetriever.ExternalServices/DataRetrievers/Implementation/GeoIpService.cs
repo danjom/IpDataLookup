@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using IpAddressDataRetriever.Services.Validators;
+using IpAddressDataRetriever.Services.Values;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +14,20 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
         //Api Key must me securely stored, for example using a KeyVault
         private const string endpointUrl = "https://ip-geolocation.whoisxmlapi.com/api/v1?apiKey=at_Eda7RqS8lddc7sXGZS0nirsrZ6ohX&";
 
-        public override async Task<JObject> RetrieveDataAsync(string domainName)
+        public override async Task<JObject> RetrieveDataAsync(string ipAddrOrDomainName)
         {
             JObject retrievedData = new JObject();
 
+            string param = DataValidator.GetInputType(ipAddrOrDomainName) switch
+            {
+                InputTypes.IpAddressv4 or InputTypes.IpAddressv6 => "ipAddress=" + ipAddrOrDomainName,
+                InputTypes.DomainName => "domain=" + ipAddrOrDomainName,
+                _ => throw new InvalidOperationException()
+            };
+
+
             // Asynchronously get the JSON response.
-            string result = await ApiRetrieverAsync(endpointUrl + domainName);
+            string result = await ApiRetrieverAsync(endpointUrl + param);
 
             if (!string.IsNullOrWhiteSpace(result))
             {

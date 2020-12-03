@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
 {
-    public class PingService : IDataInspector
+    public class PingService : IDataRetriever
     {
         private const int PingAttempts = 5;
 

@@ -10,8 +10,8 @@ namespace IpAddressDataRetriever.Services.DataRetrivers
     /// <summary>
     /// This determines the met
     /// </summary>
-    public interface IDataInspector
+    public interface IDataRetriever
     {
-        Task<JObject> RetrieveDataAsync(string address);
+        Task<JObject> RetrieveDataAsync(string ipAddrOrDomainName);
     }
 }

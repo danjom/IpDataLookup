@@ -1,5 +1,7 @@
-﻿using IpAddressDataRetriever.Services.DataRetrivers;
+﻿using IpAddressDataRetriever.Services.DataRetrievers;
+using IpAddressDataRetriever.Services.DataRetrivers;
 using IpAddressDataRetriever.Services.DataRetrivers.Implementation;
+using IpAddressDataRetriever.Services.Values;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,30 +17,29 @@ namespace IpAddressDataRetriever.API.Controllers
     [AllowAnonymous]
     [ApiVersion("1.0")]
     [Route("api/v{v:apiVersion}/[controller]")]
-    public class DataRetrieverController : ControllerBase
+    public class DataCollectorController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<DataRetrieverController> _logger;
+        private readonly ILogger<DataCollectorController> _logger;
 
-        public DataRetrieverController(ILogger<DataRetrieverController> logger)
+        public DataCollectorController(ILogger<DataCollectorController> logger)
         {
             _logger = logger;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<IEnumerable<WeatherForecast>> GetAsync()
         {
             string hostName = "swimlane.com";
             string ipAddress = "31.13.67.35";
 
-            IDataInspector inspectorService = new GeoIpService();
-
-            inspectorService.RetrieveDataAsync("domain="+hostName);
-            inspectorService.RetrieveDataAsync("ipAddress=" + ipAddress);
+            DataRetrievingHandler retrievingHandler = new DataRetrievingHandler();
+            await retrievingHandler.RetrieveData(hostName, DataServices.GeoIp);
+            await retrievingHandler.RetrieveData(ipAddress, DataServices.GeoIp);
 
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
