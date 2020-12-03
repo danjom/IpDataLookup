@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -7,18 +8,21 @@ using System.Threading.Tasks;
 
 namespace IpAddressDataRetriever.Worker.Controllers
 {
+    [RequireHttps]
     [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    [AllowAnonymous]
+    [ApiVersion("1.0")]
+    [Route("api/v{v:apiVersion}/[controller]")]
+    public class DataWorkerController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<DataWorkerController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public DataWorkerController(ILogger<DataWorkerController> logger)
         {
             _logger = logger;
         }

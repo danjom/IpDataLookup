@@ -1,15 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using IpAddressDataRetriever.Services.Services.Implementation;
+using IpAddressDataRetriever.Services.DataRetrivers.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IpAddressDataRetriever.Services.Services.Implementation.Tests
+namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation.Tests
 {
     [TestClass()]
-    public class DnsLookupServiceTests
+    public class DNSLookupServiceTests
     {
         [TestMethod()]
         public void RetrieveDataAsyncTest()
