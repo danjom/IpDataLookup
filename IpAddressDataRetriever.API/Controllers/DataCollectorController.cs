@@ -1,6 +1,8 @@
 ﻿using IpAddressDataRetriever.API.Handlers;
 using IpAddressDataRetriever.API.Models.POCO;
 using IpAddressDataRetriever.Services.DataRetrievers;
+using IpAddressDataRetriever.Services.Validators;
+using IpAddressDataRetriever.Services.Values;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,9 +20,9 @@ namespace IpAddressDataRetriever.API.Controllers
     [Route("api/v{v:apiVersion}/[controller]")]
     public class DataCollectorController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
+        private static readonly string[] AvailableServices = new[]
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+            "DNSLookup", "ReverseDNSLookup", "DomainAvailability", "GeoIp", "IpAddress", "Ping", "WhoIs", "RDAP"
         };
 
         private readonly ILogger<DataCollectorController> _logger;
@@ -31,19 +33,36 @@ namespace IpAddressDataRetriever.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> GetAsync([FromQuery(Name = "ipOrDomain")]  string ipOrDomain, [FromQuery(Name = "services")] string[] services)
         {
-            string hostName = "swimlane.com";
-            string ipAddress = "31.13.67.35";
+            //string hostName = "swimlane.com";
+            //string ipAddress = "31.13.67.35";
 
-            string[] services = { "DomainAvailability", "GeoIp", "IpAddress", "WhoIs", "Ping", "DNSLookup" };
-
-            List<RequestChunk> requestChuncks = LoadBalancer.SplitServices(services.ToList(), 3, true);
-
-            JObject response = await DataRetrieverOrchestrator.OrquestrateRetrieval(services.ToList(), hostName);
+            //string[] services = { "RDAP", "GeoIp", "IpAddress", "WhoIs", "Ping", "DNSLookup" };
 
 
-            return Ok(response);
+            //Needs to determine whether is an Ip or a domain
+            int inputType = DataValidator.GetInputType(ipOrDomain);
+            
+            if(inputType != InputTypes.Invalid)
+            {
+                //In case no services go in the query, all services are set
+                if (services?.Length == 0)
+                {
+                    services = AvailableServices;
+                }
+
+                List<RequestChunk> requestChuncks = LoadBalancer.SplitServices(services.ToList(), 3, true);
+
+                JObject response = await DataRetrieverOrchestrator.OrquestrateRetrieval(services.ToList(), ipOrDomain);
+
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest(new BasicResponse { MsgContent = "Invalid ipOrDomain param, please make sure to set a valid ip address or domain name" });
+            }
+
         }
     }
 }

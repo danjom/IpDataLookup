@@ -17,12 +17,13 @@ namespace IpAddressDataRetriever.Services.Values
     public static class DataServices
     {
         public const string DNSLookup = "DNSLookup";
+        public const string ReverseDNSLookup = "ReverseDNSLookup";
         public const string DomainAvailability = "DomainAvailability";
         public const string GeoIp = "GeoIp";
         public const string IpAddress = "IpAddress";
         public const string Ping = "Ping";
-        public const string ReverseDNSLookup = "ReverseDNSLookup";
         public const string WhoIs = "WhoIs";
+        public const string RDAP = "RDAP";
     }
 
 }

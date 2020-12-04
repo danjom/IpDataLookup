@@ -11,27 +11,30 @@ namespace IpAddressDataRetriever.Services.Validators
         {
             int inputType = InputTypes.Invalid;
 
-            if (Regex.Match(input, @"([a-zA-Z0-9\-]{1,63}\.)*[a-zA-Z\-]{1,63}", RegexOptions.IgnoreCase).Success) inputType = InputTypes.DomainName;
+            if (Regex.Match(input, @"^(([a-zA-Z]{1})|([a-zA-Z]{1}[a-zA-Z]{1})|([a-zA-Z]{1}[0-9]{1})|([0-9]{1}[a-zA-Z]{1})|([a-zA-Z0-9][a-zA-Z0-9-_]{1,61}[a-zA-Z0-9]))\.([a-zA-Z]{2,6}|[a-zA-Z0-9-]{2,30}\.[a-zA-Z]{2,3})$", RegexOptions.IgnoreCase).Success) inputType = InputTypes.DomainName;
 
             if (inputType == InputTypes.Invalid)
             {
                 //First will check if it's an IP
                 if (!IPAddress.TryParse(input, out IPAddress ip)) inputType = InputTypes.Invalid;
 
-                switch (ip.AddressFamily)
+                if(ip != null)
                 {
-                    case AddressFamily.InterNetwork:
-                        if (input.Length > 6 && input.Contains("."))
-                        {
-                            string[] s = input.Split('.');
-                            if (s.Length == 4 && s[0].Length > 0 && s[1].Length > 0 && s[2].Length > 0 && s[3].Length > 0)
-                                inputType = InputTypes.IpAddressv4;
-                        }
-                        break;
-                    case AddressFamily.InterNetworkV6:
-                        if (input.Contains(":") && input.Length > 15)
-                            inputType = InputTypes.IpAddressv6;
-                        break;
+                    switch (ip.AddressFamily)
+                    {
+                        case AddressFamily.InterNetwork:
+                            if (input.Length > 6 && input.Contains("."))
+                            {
+                                string[] s = input.Split('.');
+                                if (s.Length == 4 && s[0].Length > 0 && s[1].Length > 0 && s[2].Length > 0 && s[3].Length > 0)
+                                    inputType = InputTypes.IpAddressv4;
+                            }
+                            break;
+                        case AddressFamily.InterNetworkV6:
+                            if (input.Contains(":") && input.Length > 15)
+                                inputType = InputTypes.IpAddressv6;
+                            break;
+                    }
                 }
 
             }

@@ -1,4 +1,5 @@
 ﻿using IpAddressDataRetriever.Services.DataRetrivers.Abstraction;
+using IpAddressDataRetriever.Services.Models.POCO;
 using IpAddressDataRetriever.Services.Validators;
 using IpAddressDataRetriever.Services.Values;
 using Newtonsoft.Json.Linq;
@@ -25,11 +26,11 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
 
 
             // Asynchronously get the JSON response.
-            string result = await ApiRetrieverAsync(endpointUrl + param);
+            ResponseData result = await ApiRetrieverAsync(endpointUrl + param);
 
-            if (!string.IsNullOrWhiteSpace(result))
+            if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
             {
-                retrievedData.Add("Geo Data", JObject.Parse(result));
+                retrievedData.Add("Geo Data", JObject.Parse(result.ResponseBody));
 
             }
             else

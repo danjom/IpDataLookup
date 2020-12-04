@@ -29,9 +29,21 @@ namespace IpAddressDataRetriever.API.Handlers
 
             if(remainder > 0)
             {
-                for(int i = 0; i < remainder; ++i)
+                for (int i = 0; i < remainder; ++i)
                 {
-                    requestChunks[i].Services.Add(services[index++]);
+                    if (requestChunks.Count > i)
+                    {
+                        requestChunks[i].Services.Add(services[index++]);
+                    }
+                    else
+                    {
+                        requestChunks.Add(new RequestChunk
+                        {
+                            MasterAssigned = masterIncluded && i == workersCount - 1,
+                            Services = services.GetRange(index++, 1)
+                        });
+                    }
+                    
                 }
             }
 

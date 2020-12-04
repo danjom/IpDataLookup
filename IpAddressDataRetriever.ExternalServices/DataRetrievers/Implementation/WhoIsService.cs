@@ -1,4 +1,5 @@
 ﻿using IpAddressDataRetriever.Services.DataRetrivers.Abstraction;
+using IpAddressDataRetriever.Services.Models.POCO;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
@@ -15,11 +16,11 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
             JObject retrievedData = new JObject();
 
             // Asynchronously get the JSON response.
-            string result = await ApiRetrieverAsync(endpointUrl + domainName);
+            ResponseData result = await ApiRetrieverAsync(endpointUrl + domainName);
 
-            if (!string.IsNullOrWhiteSpace(result))
+            if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
             {
-                retrievedData.Add("WhoIs", JObject.Parse(result).GetValue("WhoisRecord"));
+                retrievedData.Add("WhoIs", JObject.Parse(result.ResponseBody).GetValue("WhoisRecord"));
 
             }
             else

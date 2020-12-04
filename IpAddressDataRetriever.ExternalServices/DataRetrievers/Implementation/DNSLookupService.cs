@@ -1,4 +1,7 @@
 ﻿using IpAddressDataRetriever.Services.DataRetrivers.Abstraction;
+using IpAddressDataRetriever.Services.Models.POCO;
+using IpAddressDataRetriever.Services.Validators;
+using IpAddressDataRetriever.Services.Values;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
@@ -13,18 +16,32 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
         {
             JObject retrievedData = new JObject();
 
-            // Asynchronously get the JSON response.
-            string result = await ApiRetrieverAsync(endpointUrl + domainName);
+            int inputType = DataValidator.GetInputType(domainName);
 
-            if (!string.IsNullOrWhiteSpace(result))
+            //DNSLookups are only enabeled for Domains not IP Addresses
+            if (inputType == InputTypes.DomainName)
             {
-                retrievedData.Add("DNS Lookup", JObject.Parse(result).GetValue("DNSData"));
+                // Asynchronously get the JSON response.
+                ResponseData result = await ApiRetrieverAsync(endpointUrl + domainName);
 
+                if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
+                {
+                    retrievedData.Add("DNS Lookup", JObject.Parse(result.ResponseBody).GetValue("DNSData"));
+
+                }
+                else
+                {
+                    retrievedData.Add("DNS Lookup", "Service not available");
+                }
             }
             else
             {
-                retrievedData.Add("DNS Lookup", "Service not available");
+                if (inputType == InputTypes.IpAddressv4 || inputType == InputTypes.IpAddressv6)
+                {
+                    retrievedData.Add("DNS Lookup", "IpOrDomain param is an IP Address, DNS Lookup is unavailable for such value");
+                }
             }
+            
 
             return retrievedData;
         }

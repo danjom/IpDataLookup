@@ -21,12 +21,13 @@ namespace IpAddressDataRetriever.Services.DataRetrievers
                 dataInspector = service switch
                 {
                     DataServices.DNSLookup => new DNSLookupService(),
+                    DataServices.ReverseDNSLookup => new ReverseDNSLookupService(),
                     DataServices.DomainAvailability => new DomainAvailabilityService(),
                     DataServices.GeoIp => new GeoIpService(),
                     DataServices.IpAddress => new IpAddressService(),
                     DataServices.Ping => new PingService(),
-                    DataServices.ReverseDNSLookup => new ReverseDNSLookupService(),
                     DataServices.WhoIs => new WhoIsService(),
+                    DataServices.RDAP => new RdapService(),
                     _ => null,
                 };
 

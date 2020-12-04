@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using IpAddressDataRetriever.Services.Models.POCO;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,10 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Abstraction
 {
     public abstract class APIDataRetriever : IDataRetriever
     {
-        private readonly string endpointUrl;
 
-
-        public static async Task<string> ApiRetrieverAsync(string endpointUri)
+        public static async Task<ResponseData> ApiRetrieverAsync(string endpointUri)
         {
-            string result = "";
+            ResponseData result = new ResponseData();
 
             try
             {
@@ -23,8 +22,13 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Abstraction
 
                 HttpResponseMessage response = await client.GetAsync(endpointUri);
 
-                // Asynchronously get the JSON response.
-                result = response.Content.ReadAsStringAsync().Result;
+                if(response != null)
+                {
+                    result.StatusCode = response.StatusCode;
+                    // Asynchronously get the JSON response.
+                    result.ResponseBody = response.Content.ReadAsStringAsync().Result;
+                }
+                
             }
             catch(Exception e)
             {
