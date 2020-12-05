@@ -51,9 +51,9 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
                 if (!onDebug)
                 {
                     var client = new TcpClient();
-                    var result = client.BeginConnect(domainOrIp, DefaultPort, null, null);
+                    await client.ConnectAsync(domainOrIp, DefaultPort);
 
-                    var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(3));
+                    var success = client.Connected;
 
                     if(success)
                         retrievedData.Add("Ping Results", domainOrIp + " is Up and Running -- Limited Data because Azure don't allow ICMP packets to avoid DoS Attacks");
