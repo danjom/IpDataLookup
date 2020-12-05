@@ -39,7 +39,6 @@ namespace IpAddressDataRetriever.API.Handlers
 
                     if(response != null)
                     {
-                        string resp = response.Content.ReadAsStringAsync().Result;
 
                         retrievedData.Merge(JObject.Parse(response.Content.ReadAsStringAsync().Result), new JsonMergeSettings
                         {
