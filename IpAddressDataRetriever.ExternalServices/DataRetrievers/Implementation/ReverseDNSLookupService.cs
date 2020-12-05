@@ -30,14 +30,14 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
                 }
                 else
                 {
-                    retrievedData.Add("Reverse DNS Lookup", "Service not available");
+                    retrievedData.Add("Reverse DNS Lookup", "Unable to retrieve lookup data");
                 }
             }
             else
             {
                 if (inputType == InputTypes.DomainName)
                 {
-                    retrievedData.Add("Rever DNS Lookup", "IpOrDomain param is a Domain Name, Reverse DNS Lookup is unavailable for such value");
+                    retrievedData.Add("Reverse DNS Lookup", "IpOrDomain param is a Domain Name, Reverse DNS Lookup is unavailable for such value");
                 }
             }
                 

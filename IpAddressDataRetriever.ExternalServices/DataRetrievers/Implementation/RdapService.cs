@@ -34,7 +34,7 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
                 }
                 else
                 {
-                    retrievedData.Add("RDAP", "Service not available");
+                    retrievedData.Add("RDAP", "Unable to retrieve RDAP data");
                 }
             }
             else

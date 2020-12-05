@@ -71,7 +71,7 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
                 Console.WriteLine("Source : " + e.Source);
                 Console.WriteLine("Message : " + e.Message);
 
-                retrievedData.Add("Ping Results", "Service not available");
+                retrievedData.Add("Ping Results", "Unable to perform ping");
             }
 
             return retrievedData;

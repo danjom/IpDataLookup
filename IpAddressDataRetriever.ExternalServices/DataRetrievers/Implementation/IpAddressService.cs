@@ -32,7 +32,7 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
                 Console.WriteLine("Source : " + e.Source);
                 Console.WriteLine("Message : " + e.Message);
 
-                retrievedData.Add("IP Addresses", "Service not available");
+                retrievedData.Add("IP Addresses", "Unable to retrieve ip addresses data");
             }
 
             return retrievedData;

@@ -35,7 +35,7 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
             }
             else
             {
-                retrievedData.Add("Geo Data", "Service not available");
+                retrievedData.Add("Geo Data", "Unable to retrieve geodata");
             }
 
             return retrievedData;

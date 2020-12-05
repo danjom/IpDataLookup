@@ -29,7 +29,7 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
                 }
                 else
                 {
-                    retrievedData.Add("Domain Availability", "Service not available");
+                    retrievedData.Add("Domain Availability", "Unable to retrieve availability data");
                 }
             }
             else

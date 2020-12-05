@@ -25,7 +25,7 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
             }
             else
             {
-                retrievedData.Add("WhoIs", "Service not available");
+                retrievedData.Add("WhoIs", "Unable to retrieve ownership data");
             }
 
             return retrievedData;
