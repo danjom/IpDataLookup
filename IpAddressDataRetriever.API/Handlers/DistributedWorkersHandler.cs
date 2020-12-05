@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using IpAddressDataRetriever.API.Models.POCO;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,21 +8,47 @@ using System.Threading.Tasks;
 
 namespace IpAddressDataRetriever.API.Handlers
 {
-    public class DistributedWorkersHandler
+    public static class DistributedWorkersHandler
     {
+        public static readonly string[] externalWorkersUris = { "https://localhost:44390/api/v1/dataworker?apiKey=xevUntljUUqoeankdKmnYFFqEXTGYEpi", "https://localhost:44390/api/v1/dataworker?apiKey=xevUntljUUqoeankdKmnYFFqEXTGYEpi" };
 
-        public async Task<JObject> RetrieveDataFromWorkerAsync(string workerUri, string[] services)
+        public static async Task<JObject> RetrieveDataFromWorkerAsync(List<RequestChunk> workingChunks, string ipOrDomain, int workersCount, int inputType)
         {
             JObject retrievedData = new JObject();
 
             try
             {
                 HttpClient client = new HttpClient();
+                HttpResponseMessage response;
+                List<Task<HttpResponseMessage>> httpResponseTasks = new List<Task<HttpResponseMessage>>();
 
-                HttpResponseMessage response = await client.GetAsync(workerUri);
+                for(int i = 0; i < workingChunks?.Count; ++i)
+                {
+                    string uri = externalWorkersUris[i % workersCount] + "&inputType=" + inputType + "&ipOrDomain=" + ipOrDomain + "&services=" + string.Join("&services=", workingChunks[i].Services);
 
-                // Asynchronously get the JSON response.
-                string result = response.Content.ReadAsStringAsync().Result;
+                    httpResponseTasks.Add(client.GetAsync(externalWorkersUris[i % workersCount] + "&inputType=" + inputType + "&ipOrDomain=" + ipOrDomain + "&services=" + string.Join("&services=", workingChunks[i].Services)));
+                }
+
+                //Now it's time to merge the response from each task to have a single json response
+                while (httpResponseTasks.Any())
+                {
+                    Task<HttpResponseMessage> finishedTask = await Task.WhenAny(httpResponseTasks);
+                    httpResponseTasks.Remove(finishedTask);
+
+                    response = finishedTask.Result;
+
+                    if(response != null)
+                    {
+                        string resp = response.Content.ReadAsStringAsync().Result;
+
+                        retrievedData.Merge(JObject.Parse(response.Content.ReadAsStringAsync().Result), new JsonMergeSettings
+                        {
+                            // Union array values together to avoid duplicates
+                            MergeArrayHandling = MergeArrayHandling.Concat
+                        });
+                        
+                    }
+                }
             }
             catch (Exception e)
             {

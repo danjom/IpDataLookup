@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using IpAddressDataRetriever.Services.DataRetrievers;
+using IpAddressDataRetriever.Services.Values;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +18,9 @@ namespace IpAddressDataRetriever.Worker.Controllers
     [Route("api/v{v:apiVersion}/[controller]")]
     public class DataWorkerController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        //This is just for demo purposes, for a real product, the API Key generation and validation needs to be implemented
+        private static readonly string ApiKey = "xevUntljUUqoeankdKmnYFFqEXTGYEpi";
+        //qwbNVcIlkjMDBhZuUMUYVIrPUpcVd6IJ //This is the other worker key
 
         private readonly ILogger<DataWorkerController> _logger;
 
@@ -28,16 +30,24 @@ namespace IpAddressDataRetriever.Worker.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<IActionResult> GetAsync([FromQuery(Name = "ipOrDomain")] string ipOrDomain, [FromQuery(Name = "services")] string[] services, [FromQuery(Name = "inputType")] int inputType, [FromQuery(Name = "apiKey")] string apiKey)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+
+            IActionResult result;
+
+            //Since this is a microservice I'm asumming that @inputType and @services arrive with valid values
+            if (!string.IsNullOrWhiteSpace(ipOrDomain) && string.Compare(apiKey, ApiKey) == 0 && inputType != InputTypes.Invalid && services?.Length > 0 )
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                JObject response = await DataRetrieverOrchestrator.OrquestrateRetrieval(services.ToList(), ipOrDomain);
+
+                result = Ok(response);
+            }
+            else
+            {
+                result = BadRequest();
+            }
+
+            return result;
         }
     }
 }

@@ -5,6 +5,17 @@ namespace IpAddressDataRetriever.API.Handlers
 {
     public static class LoadBalancer
     {
+
+        /// <summary>
+        /// This method splits the services to query in as much chunks as @workersCount
+        /// In case master will be considered a workers, considering that besides that
+        /// master needs to merge all the responses and handle the communication with the other workers
+        /// will be the one with less tasks to complete in case can't be splitted evenly between all workers
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="workersCount"></param>
+        /// <param name="masterIncluded"></param>
+        /// <returns></returns>
         public static List<RequestChunk> SplitServices(List<string> services, int workersCount, bool masterIncluded)
         {
             List<RequestChunk> requestChunks = new List<RequestChunk>();

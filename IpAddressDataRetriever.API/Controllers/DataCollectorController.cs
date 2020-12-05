@@ -20,6 +20,8 @@ namespace IpAddressDataRetriever.API.Controllers
     [Route("api/v{v:apiVersion}/[controller]")]
     public class DataCollectorController : ControllerBase
     {
+
+        private static int WorkersCount = 2;//Will be 2 remote workers
         private static readonly string[] AvailableServices = new[]
         {
             "DNSLookup", "ReverseDNSLookup", "DomainAvailability", "GeoIp", "IpAddress", "Ping", "WhoIs", "RDAP"
@@ -33,35 +35,88 @@ namespace IpAddressDataRetriever.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync([FromQuery(Name = "ipOrDomain")]  string ipOrDomain, [FromQuery(Name = "services")] string[] services)
+        public async Task<IActionResult> GetAsync([FromQuery(Name = "ipOrDomain")]  string ipOrDomain, [FromQuery(Name = "services")] string[] services, [FromQuery(Name = "useMasterAsWorker")] bool useMasterAsWorker)
         {
-            //string hostName = "swimlane.com";
-            //string ipAddress = "31.13.67.35";
+            IActionResult result = null;
 
-            //string[] services = { "RDAP", "GeoIp", "IpAddress", "WhoIs", "Ping", "DNSLookup" };
+            bool valid = true;
 
-
-            //Needs to determine whether is an Ip or a domain
-            int inputType = DataValidator.GetInputType(ipOrDomain);
-            
-            if(inputType != InputTypes.Invalid)
+            if (!string.IsNullOrWhiteSpace(ipOrDomain))
             {
-                //In case no services go in the query, all services are set
-                if (services?.Length == 0)
+                //Needs to determine whether is an Ip or a domain
+                int inputType = DataValidator.GetInputType(ipOrDomain);
+
+                if (inputType != InputTypes.Invalid)
                 {
-                    services = AvailableServices;
+                    //In case no services go in the query, all services are set
+                    if (services?.Length == 0)
+                    {
+                        services = AvailableServices;
+                    }
+
+
+                    //Now will split data for sending it to workers
+                    List<RequestChunk> requestChuncks;
+                    List<Task<JObject>> workingTasks = new List<Task<JObject>>();
+
+                    //Now will define the chunks, if master will be used then workers are incresed by 1 to make the calculations
+                    requestChuncks = LoadBalancer.SplitServices(services.ToList(), useMasterAsWorker ? WorkersCount +1 : WorkersCount, useMasterAsWorker);
+
+                    //If worked was splitted successfully, it's time to process each chunk of services
+                    if (requestChuncks?.Count > 0)
+                    {
+                        //Since the master will also work, needs to remove its chuck before sending to the workers
+                        if (useMasterAsWorker)
+                        {
+                            //Now will create the own task to process its own chunk
+                            workingTasks.Add(DataRetrieverOrchestrator.OrquestrateRetrieval(requestChuncks.ElementAt(requestChuncks.Count - 1).Services.ToList(), ipOrDomain));
+
+                            requestChuncks.RemoveAt(requestChuncks.Count - 1);
+                        }
+                            
+
+                        //Now creates the task which manage the workers
+                        workingTasks.Add(DistributedWorkersHandler.RetrieveDataFromWorkerAsync(requestChuncks, ipOrDomain, WorkersCount, inputType));
+
+                        JObject response = new JObject();
+
+                        //Now it's time to merge the response from each task to have a single json response
+                        while (workingTasks.Any())
+                        {
+                            Task<JObject> finishedTask = await Task.WhenAny(workingTasks);
+                            workingTasks.Remove(finishedTask);
+                            response.Merge(await finishedTask, new JsonMergeSettings
+                            {
+                                // Union array values together to avoid duplicates
+                                MergeArrayHandling = MergeArrayHandling.Concat
+                            });
+                        }
+
+                        result = Ok(response);
+                    }
+                    else
+                    {
+                        result = new StatusCodeResult(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError);
+                    }
+
                 }
-
-                List<RequestChunk> requestChuncks = LoadBalancer.SplitServices(services.ToList(), 3, true);
-
-                JObject response = await DataRetrieverOrchestrator.OrquestrateRetrieval(services.ToList(), ipOrDomain);
-
-                return Ok(response);
+                else
+                {
+                    valid = false;
+                }
             }
             else
             {
-                return BadRequest(new BasicResponse { MsgContent = "Invalid ipOrDomain param, please make sure to set a valid ip address or domain name" });
+                valid = false;
             }
+
+            if (!valid)
+            {
+                result = BadRequest(new BasicResponse { MsgContent = "Invalid ipOrDomain param, please make sure to set a valid ip address or domain name" });
+            }
+
+
+            return result;
 
         }
     }
