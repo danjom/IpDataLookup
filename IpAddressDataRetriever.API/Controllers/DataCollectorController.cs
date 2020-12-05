@@ -57,7 +57,7 @@ namespace IpAddressDataRetriever.API.Controllers
 
                     //Now will split data for sending it to workers
                     List<RequestChunk> requestChuncks;
-                    List<Task<JObject>> workingTasks = new List<Task<JObject>>();
+                    List<Task<JObject>> workerTasks = new List<Task<JObject>>();
 
                     //Now will define the chunks, if master will be used then workers are incresed by 1 to make the calculations
                     requestChuncks = LoadBalancer.SplitServices(services.ToList(), useMasterAsWorker ? WorkersCount +1 : WorkersCount, useMasterAsWorker);
@@ -69,22 +69,22 @@ namespace IpAddressDataRetriever.API.Controllers
                         if (useMasterAsWorker)
                         {
                             //Now will create the own task to process its own chunk
-                            workingTasks.Add(DataRetrieverOrchestrator.OrquestrateRetrieval(requestChuncks.ElementAt(requestChuncks.Count - 1).Services.ToList(), ipOrDomain));
+                            workerTasks.Add(DataRetrieverOrchestrator.OrquestrateRetrieval(requestChuncks.ElementAt(requestChuncks.Count - 1).Services.ToList(), ipOrDomain));
 
                             requestChuncks.RemoveAt(requestChuncks.Count - 1);
                         }
-                            
+
 
                         //Now creates the task which manage the workers
-                        workingTasks.Add(DistributedWorkersHandler.RetrieveDataFromWorkerAsync(requestChuncks, ipOrDomain, WorkersCount, inputType));
+                        workerTasks.Add(DistributedWorkersHandler.RetrieveDataFromWorkerAsync(requestChuncks, ipOrDomain, WorkersCount, inputType));
 
                         JObject response = new JObject();
 
                         //Now it's time to merge the response from each task to have a single json response
-                        while (workingTasks.Any())
+                        while (workerTasks.Any())
                         {
-                            Task<JObject> finishedTask = await Task.WhenAny(workingTasks);
-                            workingTasks.Remove(finishedTask);
+                            Task<JObject> finishedTask = await Task.WhenAny(workerTasks);
+                            workerTasks.Remove(finishedTask);
                             response.Merge(await finishedTask, new JsonMergeSettings
                             {
                                 // Union array values together to avoid duplicates

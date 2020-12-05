@@ -23,7 +23,6 @@ namespace IpAddressDataRetriever.Services.DataRetrievers
                 for(int i = 0; i < serviceNames?.Count; ++i)
                 {
                     currentTask = retrievingHandler.RetrieveData(ipOrDomain, serviceNames[i]);
-                    //currentTask.Start();
 
                     retrievalTasks.Add(currentTask);
                 }
