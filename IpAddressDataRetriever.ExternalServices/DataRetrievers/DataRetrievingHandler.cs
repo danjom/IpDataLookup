@@ -9,7 +9,7 @@ namespace IpAddressDataRetriever.Services.DataRetrievers
 {
     public class DataRetrievingHandler
     {
-        public async Task<JObject> RetrieveData(string param, string service)
+        public async Task<JObject> RetrieveData(string param, string service, int inputType)
         {
             JObject result = null;
 
@@ -33,7 +33,7 @@ namespace IpAddressDataRetriever.Services.DataRetrievers
 
                 if(dataInspector != null)
                 {
-                    result = await dataInspector.RetrieveDataAsync(param);
+                    result = await dataInspector.RetrieveDataAsync(param, inputType);
                 }
             }
             catch (Exception e)

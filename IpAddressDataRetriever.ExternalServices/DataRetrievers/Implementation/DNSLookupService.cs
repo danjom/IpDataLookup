@@ -12,11 +12,9 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
         //Api Key must me securely stored, for example using a KeyVault
         private const string endpointUrl = "https://www.whoisxmlapi.com/whoisserver/DNSService?apiKey=at_Eda7RqS8lddc7sXGZS0nirsrZ6ohX&type=1&outputFormat=json&domainName=";
 
-        public override async Task<JObject> RetrieveDataAsync(string domainName)
+        public override async Task<JObject> RetrieveDataAsync(string domainName, int inputType)
         {
             JObject retrievedData = new JObject();
-
-            int inputType = DataValidator.GetInputType(domainName);
 
             //DNSLookups are only enabeled for Domains not IP Addresses
             if (inputType == InputTypes.DomainName)

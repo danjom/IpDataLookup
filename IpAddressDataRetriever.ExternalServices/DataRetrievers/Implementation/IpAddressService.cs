@@ -10,7 +10,7 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
 {
     public class IpAddressService : IDataRetriever
     {
-        public async Task<JObject> RetrieveDataAsync(string ipAddress)
+        public async Task<JObject> RetrieveDataAsync(string ipAddress, int inputType)
         {
             JObject retrievedData = new JObject();
 

@@ -8,7 +8,7 @@ namespace IpAddressDataRetriever.Services.DataRetrievers
 {
     public static class DataRetrieverOrchestrator
     {
-        public static async Task<JObject> OrquestrateRetrieval(List<string> serviceNames, string ipOrDomain)
+        public static async Task<JObject> OrquestrateRetrieval(List<string> serviceNames, string ipOrDomain, int inputType)
         {
             JObject requestedData = new JObject();
 
@@ -22,7 +22,7 @@ namespace IpAddressDataRetriever.Services.DataRetrievers
                 //Create the tasks
                 for(int i = 0; i < serviceNames?.Count; ++i)
                 {
-                    currentTask = retrievingHandler.RetrieveData(ipOrDomain, serviceNames[i]);
+                    currentTask = retrievingHandler.RetrieveData(ipOrDomain, serviceNames[i], inputType);
 
                     retrievalTasks.Add(currentTask);
                 }

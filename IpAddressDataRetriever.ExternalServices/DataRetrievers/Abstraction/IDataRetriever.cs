@@ -12,6 +12,6 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Abstraction
     /// </summary>
     public interface IDataRetriever
     {
-        Task<JObject> RetrieveDataAsync(string ipAddrOrDomainName);
+        Task<JObject> RetrieveDataAsync(string ipAddrOrDomainName, int inputType);
     }
 }

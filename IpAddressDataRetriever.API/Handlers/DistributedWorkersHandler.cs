@@ -10,7 +10,7 @@ namespace IpAddressDataRetriever.API.Handlers
 {
     public static class DistributedWorkersHandler
     {
-        public static readonly string[] externalWorkersUris = { "https://localhost:44390/api/v1/dataworker?apiKey=xevUntljUUqoeankdKmnYFFqEXTGYEpi", "https://localhost:44390/api/v1/dataworker?apiKey=xevUntljUUqoeankdKmnYFFqEXTGYEpi" };
+        public static readonly string[] externalWorkersUris = { "https://serviceworker1.azurewebsites.net/api/v1/dataworker?apiKey=xevUntljUUqoeankdKmnYFFqEXTGYEpi", "https://serviceworker2.azurewebsites.net/api/v1/dataworker?apiKey=qwbNVcIlkjMDBhZuUMUYVIrPUpcVd6IJ" };
 
         public static async Task<JObject> RetrieveDataFromWorkerAsync(List<RequestChunk> workingChunks, string ipOrDomain, int workersCount, int inputType)
         {

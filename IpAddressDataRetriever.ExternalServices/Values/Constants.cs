@@ -16,14 +16,14 @@ namespace IpAddressDataRetriever.Services.Values
 
     public static class DataServices
     {
-        public const string DNSLookup = "DNSLookup";
-        public const string ReverseDNSLookup = "ReverseDNSLookup";
-        public const string DomainAvailability = "DomainAvailability";
-        public const string GeoIp = "GeoIp";
-        public const string IpAddress = "IpAddress";
-        public const string Ping = "Ping";
-        public const string WhoIs = "WhoIs";
-        public const string RDAP = "RDAP";
+        public const string DNSLookup = "dnslookup";
+        public const string ReverseDNSLookup = "reversednslookup";
+        public const string DomainAvailability = "domainavailability";
+        public const string GeoIp = "geoip";
+        public const string IpAddress = "ipaddress";
+        public const string Ping = "ping";
+        public const string WhoIs = "whois";
+        public const string RDAP = "rdap";
     }
 
 }

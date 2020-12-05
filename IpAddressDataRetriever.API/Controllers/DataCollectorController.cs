@@ -24,7 +24,7 @@ namespace IpAddressDataRetriever.API.Controllers
         private static int WorkersCount = 2;//Will be 2 remote workers
         private static readonly string[] AvailableServices = new[]
         {
-            "DNSLookup", "ReverseDNSLookup", "DomainAvailability", "GeoIp", "IpAddress", "Ping", "WhoIs", "RDAP"
+            "dnslookup", "reversednslookup", "domainavailability", "geoip", "ipaddress", "ping", "whois", "rdap"
         };
 
         private readonly ILogger<DataCollectorController> _logger;
@@ -36,6 +36,7 @@ namespace IpAddressDataRetriever.API.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetAsync([FromQuery(Name = "ipOrDomain")]  string ipOrDomain, [FromQuery(Name = "services")] string[] services, [FromQuery(Name = "useMasterAsWorker")] bool useMasterAsWorker)
+        
         {
             IActionResult result = null;
 
@@ -48,6 +49,9 @@ namespace IpAddressDataRetriever.API.Controllers
 
                 if (inputType != InputTypes.Invalid)
                 {
+                    //In case of repeated, deletes them
+                    services = services.Distinct().Select(s => s.ToLowerInvariant()).ToArray();
+
                     //In case no services go in the query, all services are set
                     if (services?.Length == 0)
                     {
@@ -69,7 +73,7 @@ namespace IpAddressDataRetriever.API.Controllers
                         if (useMasterAsWorker)
                         {
                             //Now will create the own task to process its own chunk
-                            workerTasks.Add(DataRetrieverOrchestrator.OrquestrateRetrieval(requestChuncks.ElementAt(requestChuncks.Count - 1).Services.ToList(), ipOrDomain));
+                            workerTasks.Add(DataRetrieverOrchestrator.OrquestrateRetrieval(requestChuncks.ElementAt(requestChuncks.Count - 1).Services.ToList(), ipOrDomain, inputType));
 
                             requestChuncks.RemoveAt(requestChuncks.Count - 1);
                         }

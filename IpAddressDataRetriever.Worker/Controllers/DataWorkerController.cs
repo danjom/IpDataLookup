@@ -20,7 +20,7 @@ namespace IpAddressDataRetriever.Worker.Controllers
     {
         //This is just for demo purposes, for a real product, the API Key generation and validation needs to be implemented
         private static readonly string ApiKey = "xevUntljUUqoeankdKmnYFFqEXTGYEpi";
-        //qwbNVcIlkjMDBhZuUMUYVIrPUpcVd6IJ //This is the other worker key
+        //worker 1 xevUntljUUqoeankdKmnYFFqEXTGYEpi  -- worker 2 qwbNVcIlkjMDBhZuUMUYVIrPUpcVd6IJ 
 
         private readonly ILogger<DataWorkerController> _logger;
 
@@ -38,7 +38,7 @@ namespace IpAddressDataRetriever.Worker.Controllers
             //Since this is a microservice I'm asumming that @inputType and @services arrive with valid values
             if (!string.IsNullOrWhiteSpace(ipOrDomain) && string.Compare(apiKey, ApiKey) == 0 && inputType != InputTypes.Invalid && services?.Length > 0 )
             {
-                JObject response = await DataRetrieverOrchestrator.OrquestrateRetrieval(services.ToList(), ipOrDomain);
+                JObject response = await DataRetrieverOrchestrator.OrquestrateRetrieval(services.ToList(), ipOrDomain, inputType);
 
                 result = Ok(response);
             }

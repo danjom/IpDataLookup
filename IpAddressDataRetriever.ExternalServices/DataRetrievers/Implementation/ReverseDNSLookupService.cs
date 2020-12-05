@@ -13,11 +13,9 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
         //Api Key must me securely stored, for example using a KeyVault
         private const string endpointUrl = "https://reverse-ip.whoisxmlapi.com/api/v1?apiKey=at_Eda7RqS8lddc7sXGZS0nirsrZ6ohX&outputFormat=json&ip=";
 
-        public override async Task<JObject> RetrieveDataAsync(string ipAddress)
+        public override async Task<JObject> RetrieveDataAsync(string ipAddress, int inputType)
         {
             JObject retrievedData = new JObject();
-
-            int inputType = DataValidator.GetInputType(ipAddress);
 
             //DNSLookups are only enabeled for Domains not IP Addresses
             if (inputType == InputTypes.IpAddressv4 || inputType == InputTypes.IpAddressv6)

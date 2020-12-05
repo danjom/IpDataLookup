@@ -13,7 +13,7 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
         //Api Key must me securely stored, for example using a KeyVault
         private const string endpointUrl = "https://ip-geolocation.whoisxmlapi.com/api/v1?apiKey=at_Eda7RqS8lddc7sXGZS0nirsrZ6ohX&";
 
-        public override async Task<JObject> RetrieveDataAsync(string ipAddrOrDomainName)
+        public override async Task<JObject> RetrieveDataAsync(string ipAddrOrDomainName, int inputType)
         {
             JObject retrievedData = new JObject();
 
@@ -30,7 +30,7 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
 
             if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
             {
-                retrievedData.Add("Geo Data", JObject.Parse(result.ResponseBody));
+                retrievedData.Add("Geo IP", JObject.Parse(result.ResponseBody));
 
             }
             else

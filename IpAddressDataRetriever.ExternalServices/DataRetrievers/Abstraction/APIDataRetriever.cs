@@ -40,6 +40,6 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Abstraction
             return result;
         }
 
-        public abstract Task<JObject> RetrieveDataAsync(string address);
+        public abstract Task<JObject> RetrieveDataAsync(string address, int inputType);
     }
 }
