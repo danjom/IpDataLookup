@@ -44,7 +44,7 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
                     }
                 }
 
-                //retrievedData.Add("Ping Results", JArray.Parse(JsonConvert.SerializeObject(pingResponses)));
+                retrievedData.Add("Ping Results", JArray.Parse(JsonConvert.SerializeObject(pingResponses)));
 
 #endif
                 

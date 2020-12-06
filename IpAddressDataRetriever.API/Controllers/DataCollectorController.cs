@@ -42,9 +42,6 @@ namespace IpAddressDataRetriever.API.Controllers
 
             bool valid = true;
 
-            DataRetrievingHandler dataRetrievingHandler = new DataRetrievingHandler();
-            await dataRetrievingHandler.RetrieveData(ipOrDomain, "ping", InputTypes.DomainName);
-
             if (!string.IsNullOrWhiteSpace(ipOrDomain))
             {
                 //Needs to determine whether is an Ip or a domain
@@ -52,8 +49,10 @@ namespace IpAddressDataRetriever.API.Controllers
 
                 if (inputType != InputTypes.Invalid)
                 {
-                    //In case of repeated, deletes them
-                    services = services.Distinct().Select(s => s.ToLowerInvariant()).ToArray();
+
+                    //In case of repeated, deletes them and set all to lower case
+                    if (services?.Length > 0)
+                        services = services.Distinct().Select(s => s.ToLowerInvariant()).ToArray();
 
                     //In case no services go in the query, all services are set
                     if (services?.Length == 0)
