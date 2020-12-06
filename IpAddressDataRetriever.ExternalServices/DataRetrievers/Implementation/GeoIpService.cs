@@ -17,26 +17,30 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
         {
             JObject retrievedData = new JObject();
 
-            string param = DataValidator.GetInputType(ipAddrOrDomainName) switch
+            if (!string.IsNullOrWhiteSpace(ipAddrOrDomainName)) 
             {
-                InputTypes.IpAddressv4 or InputTypes.IpAddressv6 => "ipAddress=" + ipAddrOrDomainName,
-                InputTypes.DomainName => "domain=" + ipAddrOrDomainName,
-                _ => throw new InvalidOperationException()
-            };
+                string param = DataValidator.GetInputType(ipAddrOrDomainName) switch
+                {
+                    InputTypes.IpAddressv4 or InputTypes.IpAddressv6 => "ipAddress=" + ipAddrOrDomainName,
+                    InputTypes.DomainName => "domain=" + ipAddrOrDomainName,
+                    _ => throw new InvalidOperationException()
+                };
 
 
-            // Asynchronously get the JSON response.
-            ResponseData result = await ApiRetrieverAsync(endpointUrl + param);
+                // Asynchronously get the JSON response.
+                ResponseData result = await ApiRetrieverAsync(endpointUrl + param);
 
-            if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
-            {
-                retrievedData.Add("Geo IP", JObject.Parse(result.ResponseBody));
+                if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
+                {
+                    retrievedData.Add("Geo IP", JObject.Parse(result.ResponseBody));
 
+                }
+                else
+                {
+                    retrievedData.Add("Geo Data", "Unable to retrieve geodata");
+                }
             }
-            else
-            {
-                retrievedData.Add("Geo Data", "Unable to retrieve geodata");
-            }
+            
 
             return retrievedData;
         }

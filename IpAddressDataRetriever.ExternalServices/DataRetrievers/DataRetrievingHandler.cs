@@ -7,40 +7,42 @@ using System.Threading.Tasks;
 
 namespace IpAddressDataRetriever.Services.DataRetrievers
 {
-    public class DataRetrievingHandler
+    public static class DataRetrievingHandler
     {
-        public async Task<JObject> RetrieveData(string param, string service, int inputType)
+        public static async Task<JObject> RetrieveData(string param, string service, int inputType)
         {
-            JObject result = null;
+            JObject result = new JObject();
 
-
-            try
+            if(!string.IsNullOrWhiteSpace(param) && !string.IsNullOrWhiteSpace(service) && inputType != InputTypes.Invalid)
             {
-                IDataRetriever dataInspector;
-
-                dataInspector = service switch
+                try
                 {
-                    DataServices.DNSLookup => new DNSLookupService(),
-                    DataServices.ReverseDNSLookup => new ReverseDNSLookupService(),
-                    DataServices.DomainAvailability => new DomainAvailabilityService(),
-                    DataServices.GeoIp => new GeoIpService(),
-                    DataServices.IpAddress => new IpAddressService(),
-                    DataServices.Ping => new PingService(),
-                    DataServices.WhoIs => new WhoIsService(),
-                    DataServices.RDAP => new RdapService(),
-                    _ => null,
-                };
+                    IDataRetriever dataInspector;
 
-                if(dataInspector != null)
-                {
-                    result = await dataInspector.RetrieveDataAsync(param, inputType);
+                    dataInspector = service switch
+                    {
+                        DataServices.DNSLookup => new DNSLookupService(),
+                        DataServices.ReverseDNSLookup => new ReverseDNSLookupService(),
+                        DataServices.DomainAvailability => new DomainAvailabilityService(),
+                        DataServices.GeoIp => new GeoIpService(),
+                        DataServices.IpAddress => new IpAddressService(),
+                        DataServices.Ping => new PingService(),
+                        DataServices.WhoIs => new WhoIsService(),
+                        DataServices.RDAP => new RdapService(),
+                        _ => null,
+                    };
+
+                    if (dataInspector != null)
+                    {
+                        result = await dataInspector.RetrieveDataAsync(param, inputType);
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception caught!!!");
-                Console.WriteLine("Source : " + e.Source);
-                Console.WriteLine("Message : " + e.Message);
+                catch (Exception e)
+                {
+                    Console.WriteLine("Exception caught!!!");
+                    Console.WriteLine("Source : " + e.Source);
+                    Console.WriteLine("Message : " + e.Message);
+                }
             }
 
             return result;

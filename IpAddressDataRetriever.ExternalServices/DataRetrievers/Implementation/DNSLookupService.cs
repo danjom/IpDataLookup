@@ -16,30 +16,34 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
         {
             JObject retrievedData = new JObject();
 
-            //DNSLookups are only enabeled for Domains not IP Addresses
-            if (inputType == InputTypes.DomainName)
+            if (!string.IsNullOrWhiteSpace(domainName))
             {
-                // Asynchronously get the JSON response.
-                ResponseData result = await ApiRetrieverAsync(endpointUrl + domainName);
-
-                if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
+                //DNSLookups are only enabeled for Domains not IP Addresses
+                if (inputType == InputTypes.DomainName)
                 {
-                    retrievedData.Add("DNS Lookup", JObject.Parse(result.ResponseBody).GetValue("DNSData"));
+                    // Asynchronously get the JSON response.
+                    ResponseData result = await ApiRetrieverAsync(endpointUrl + domainName);
 
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
+                    {
+                        retrievedData.Add("DNS Lookup", JObject.Parse(result.ResponseBody).GetValue("DNSData"));
+
+                    }
+                    else
+                    {
+                        retrievedData.Add("DNS Lookup", "Service not available");
+                    }
                 }
                 else
                 {
-                    retrievedData.Add("DNS Lookup", "Service not available");
+                    if (inputType == InputTypes.IpAddressv4 || inputType == InputTypes.IpAddressv6)
+                    {
+                        retrievedData.Add("DNS Lookup", "IpOrDomain param is an IP Address, DNS Lookup is unavailable for such value");
+                    }
                 }
+
             }
-            else
-            {
-                if (inputType == InputTypes.IpAddressv4 || inputType == InputTypes.IpAddressv6)
-                {
-                    retrievedData.Add("DNS Lookup", "IpOrDomain param is an IP Address, DNS Lookup is unavailable for such value");
-                }
-            }
-            
+
 
             return retrievedData;
         }

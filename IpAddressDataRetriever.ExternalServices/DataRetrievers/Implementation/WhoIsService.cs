@@ -12,20 +12,23 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
 
         public override async Task<JObject> RetrieveDataAsync(string domainName, int inputType)
         {
-
             JObject retrievedData = new JObject();
 
-            // Asynchronously get the JSON response.
-            ResponseData result = await ApiRetrieverAsync(endpointUrl + domainName);
-
-            if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
+            if (!string.IsNullOrWhiteSpace(domainName))
             {
-                retrievedData.Add("WhoIs", JObject.Parse(result.ResponseBody).GetValue("WhoisRecord"));
 
-            }
-            else
-            {
-                retrievedData.Add("WhoIs", "Unable to retrieve ownership data");
+                // Asynchronously get the JSON response.
+                ResponseData result = await ApiRetrieverAsync(endpointUrl + domainName);
+
+                if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
+                {
+                    retrievedData.Add("WhoIs", JObject.Parse(result.ResponseBody).GetValue("WhoisRecord"));
+
+                }
+                else
+                {
+                    retrievedData.Add("WhoIs", "Unable to retrieve ownership data");
+                }
             }
 
             return retrievedData;

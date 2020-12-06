@@ -42,6 +42,8 @@ namespace IpAddressDataRetriever.API.Controllers
 
             bool valid = true;
 
+            await DataRetrievingHandler.RetrieveData(ipOrDomain, "ping", InputTypes.IpAddressv4);
+
             if (!string.IsNullOrWhiteSpace(ipOrDomain))
             {
                 //Needs to determine whether is an Ip or a domain

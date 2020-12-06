@@ -21,31 +21,33 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
 
             JObject retrievedData = new JObject();
 
-            //RDAPs are only enabeled for Domains not IP Addresses
-            if (inputType == InputTypes.DomainName)
+            if (!string.IsNullOrWhiteSpace(domainName))
             {
-                // Asynchronously get the JSON response.
-                ResponseData result = await ApiRetrieverAsync(endpointUrl + domainName);
 
-                if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
+                //RDAPs are only enabeled for Domains not IP Addresses
+                if (inputType == InputTypes.DomainName)
                 {
-                    retrievedData.Add("RDAP", JObject.Parse(result.ResponseBody));
+                    // Asynchronously get the JSON response.
+                    ResponseData result = await ApiRetrieverAsync(endpointUrl + domainName);
 
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
+                    {
+                        retrievedData.Add("RDAP", JObject.Parse(result.ResponseBody));
+
+                    }
+                    else
+                    {
+                        retrievedData.Add("RDAP", "Unable to retrieve RDAP data");
+                    }
                 }
                 else
                 {
-                    retrievedData.Add("RDAP", "Unable to retrieve RDAP data");
+                    if (inputType == InputTypes.IpAddressv4 || inputType == InputTypes.IpAddressv6)
+                    {
+                        retrievedData.Add("RDAP", "IpOrDomain param is an IP Address, RDAP is unavailable for such value");
+                    }
                 }
             }
-            else
-            {
-                if (inputType == InputTypes.IpAddressv4 || inputType == InputTypes.IpAddressv6)
-                {
-                    retrievedData.Add("RDAP", "IpOrDomain param is an IP Address, RDAP is unavailable for such value");
-                }
-            }
-
-                
 
             return retrievedData;
         }

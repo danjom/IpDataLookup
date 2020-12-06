@@ -18,15 +18,19 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Abstraction
 
             try
             {
-                HttpClient client = new HttpClient();
-
-                HttpResponseMessage response = await client.GetAsync(endpointUri);
-
-                if(response != null)
+                if (!string.IsNullOrWhiteSpace(endpointUri))
                 {
-                    result.StatusCode = response.StatusCode;
-                    // Asynchronously get the JSON response.
-                    result.ResponseBody = response.Content.ReadAsStringAsync().Result;
+
+                    HttpClient client = new HttpClient();
+
+                    HttpResponseMessage response = await client.GetAsync(endpointUri);
+
+                    if (response != null)
+                    {
+                        result.StatusCode = response.StatusCode;
+                        // Asynchronously get the JSON response.
+                        result.ResponseBody = response.Content.ReadAsStringAsync().Result;
+                    }
                 }
                 
             }

@@ -17,27 +17,31 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
         {
             JObject retrievedData = new JObject();
 
-            //DNSLookups are only enabeled for Domains not IP Addresses
-            if (inputType == InputTypes.IpAddressv4 || inputType == InputTypes.IpAddressv6)
+            if (!string.IsNullOrWhiteSpace(ipAddress))
             {
-                // Asynchronously get the JSON response.
-                ResponseData result = await ApiRetrieverAsync(endpointUrl + ipAddress);
 
-                if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
+                //DNSLookups are only enabeled for Domains not IP Addresses
+                if (inputType == InputTypes.IpAddressv4 || inputType == InputTypes.IpAddressv6)
                 {
-                    retrievedData.Add("Reverse DNS Lookup", JArray.Parse(JsonConvert.SerializeObject(JObject.Parse(result.ResponseBody).GetValue("result"))));
+                    // Asynchronously get the JSON response.
+                    ResponseData result = await ApiRetrieverAsync(endpointUrl + ipAddress);
 
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
+                    {
+                        retrievedData.Add("Reverse DNS Lookup", JArray.Parse(JsonConvert.SerializeObject(JObject.Parse(result.ResponseBody).GetValue("result"))));
+
+                    }
+                    else
+                    {
+                        retrievedData.Add("Reverse DNS Lookup", "Unable to retrieve lookup data");
+                    }
                 }
                 else
                 {
-                    retrievedData.Add("Reverse DNS Lookup", "Unable to retrieve lookup data");
-                }
-            }
-            else
-            {
-                if (inputType == InputTypes.DomainName)
-                {
-                    retrievedData.Add("Reverse DNS Lookup", "IpOrDomain param is a Domain Name, Reverse DNS Lookup is unavailable for such value");
+                    if (inputType == InputTypes.DomainName)
+                    {
+                        retrievedData.Add("Reverse DNS Lookup", "IpOrDomain param is a Domain Name, Reverse DNS Lookup is unavailable for such value");
+                    }
                 }
             }
                 

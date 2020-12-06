@@ -20,41 +20,45 @@ namespace IpAddressDataRetriever.API.Handlers
         {
             List<RequestChunk> requestChunks = new List<RequestChunk>();
 
-            int chunkSize = services.Count / workersCount;
-            int remainder = services.Count % workersCount;
-            int index = 0; 
-
-            if(chunkSize > 0)
+            if(workersCount > 0 && services?.Count > 0)
             {
-                for(int i = 0; i < workersCount; ++i)
-                {
-                    requestChunks.Add(new RequestChunk
-                    {
-                        MasterAssigned = masterIncluded && i == workersCount - 1,
-                        Services = services.GetRange(index, chunkSize)
-                    });
 
-                    index += chunkSize;
-                }
-            }
+                int chunkSize = services.Count / workersCount;
+                int remainder = services.Count % workersCount;
+                int index = 0;
 
-            if(remainder > 0)
-            {
-                for (int i = 0; i < remainder; ++i)
+                if (chunkSize > 0)
                 {
-                    if (requestChunks.Count > i)
-                    {
-                        requestChunks[i].Services.Add(services[index++]);
-                    }
-                    else
+                    for (int i = 0; i < workersCount; ++i)
                     {
                         requestChunks.Add(new RequestChunk
                         {
                             MasterAssigned = masterIncluded && i == workersCount - 1,
-                            Services = services.GetRange(index++, 1)
+                            Services = services.GetRange(index, chunkSize)
                         });
+
+                        index += chunkSize;
                     }
-                    
+                }
+
+                if (remainder > 0)
+                {
+                    for (int i = 0; i < remainder; ++i)
+                    {
+                        if (requestChunks.Count > i)
+                        {
+                            requestChunks[i].Services.Add(services[index++]);
+                        }
+                        else
+                        {
+                            requestChunks.Add(new RequestChunk
+                            {
+                                MasterAssigned = masterIncluded && i == workersCount - 1,
+                                Services = services.GetRange(index++, 1)
+                            });
+                        }
+
+                    }
                 }
             }
 

@@ -14,25 +14,29 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
         {
             JObject retrievedData = new JObject();
 
-            try
+            if (!string.IsNullOrWhiteSpace(ipAddress))
             {
-                IPAddress[] hostEntry = await Dns.GetHostAddressesAsync(ipAddress);
 
-                if(hostEntry?.Length > 0)
+                try
                 {
-                    string[] ips = hostEntry.Select(ip => ip.ToString()).ToArray();
+                    IPAddress[] hostEntry = await Dns.GetHostAddressesAsync(ipAddress);
 
-                    retrievedData.Add("IP Addresses", JArray.Parse(JsonConvert.SerializeObject(ips)));
+                    if (hostEntry?.Length > 0)
+                    {
+                        string[] ips = hostEntry.Select(ip => ip.ToString()).ToArray();
+
+                        retrievedData.Add("IP Addresses", JArray.Parse(JsonConvert.SerializeObject(ips)));
+                    }
+
                 }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Exception caught!!!");
+                    Console.WriteLine("Source : " + e.Source);
+                    Console.WriteLine("Message : " + e.Message);
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception caught!!!");
-                Console.WriteLine("Source : " + e.Source);
-                Console.WriteLine("Message : " + e.Message);
-
-                retrievedData.Add("IP Addresses", "Unable to retrieve ip addresses data");
+                    retrievedData.Add("IP Addresses", "Unable to retrieve ip addresses data");
+                }
             }
 
             return retrievedData;
