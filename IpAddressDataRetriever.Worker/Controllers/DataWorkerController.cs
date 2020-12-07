@@ -1,4 +1,4 @@
-﻿using IpAddressDataRetriever.Services.DataRetrievers;
+﻿using IpAddressDataRetriever.Services.DataRetrievers.Handlers;
 using IpAddressDataRetriever.Services.Values;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +38,7 @@ namespace IpAddressDataRetriever.Worker.Controllers
             //Since this is a microservice I'm asumming that @inputType and @services arrive with valid values
             if (!string.IsNullOrWhiteSpace(ipOrDomain) && string.Compare(apiKey, ApiKey) == 0 && inputType != InputTypes.Invalid && services?.Length > 0 )
             {
-                JObject response = await DataRetrieverOrchestrator.OrquestrateRetrieval(services.ToList(), ipOrDomain, inputType);
+                JObject response = await DataRetrievingOrchestrationHandler.OrquestrateRetrieval(services.ToList(), ipOrDomain, inputType);
 
                 result = Ok(response);
             }

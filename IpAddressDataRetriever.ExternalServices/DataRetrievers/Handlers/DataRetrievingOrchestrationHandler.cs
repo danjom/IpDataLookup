@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IpAddressDataRetriever.Services.DataRetrievers
+namespace IpAddressDataRetriever.Services.DataRetrievers.Handlers
 {
-    public static class DataRetrieverOrchestrator
+    public static class DataRetrievingOrchestrationHandler
     {
         public static async Task<JObject> OrquestrateRetrieval(List<string> serviceNames, string ipOrDomain, int inputType)
         {

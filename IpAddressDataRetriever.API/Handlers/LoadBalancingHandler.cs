@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace IpAddressDataRetriever.API.Handlers
 {
-    public static class LoadBalancer
+    public static class LoadBalancingHandler
     {
 
         /// <summary>

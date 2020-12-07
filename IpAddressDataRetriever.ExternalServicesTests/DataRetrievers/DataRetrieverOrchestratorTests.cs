@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using IpAddressDataRetriever.Services.DataRetrievers;
+using IpAddressDataRetriever.Services.DataRetrievers.Handlers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace IpAddressDataRetriever.Services.DataRetrievers.Tests
             string[]  services1 = { "geoip", "domainavailability"};
             inputType = InputTypes.DomainName;
 
-            response = DataRetrieverOrchestrator.OrquestrateRetrieval(services1.ToList(), param, inputType).Result;
+            response = DataRetrievingOrchestrationHandler.OrquestrateRetrieval(services1.ToList(), param, inputType).Result;
 
             Assert.IsNotNull(response);
 
@@ -35,7 +35,7 @@ namespace IpAddressDataRetriever.Services.DataRetrievers.Tests
             string[] services2 = { "dnslookup", "reversednslookup", "domainavailability", "geoip", "ipaddress", "ping", "whois", "rdap" };
             inputType = InputTypes.IpAddressv4;
 
-            response = DataRetrieverOrchestrator.OrquestrateRetrieval(services2.ToList(), param, inputType).Result;
+            response = DataRetrievingOrchestrationHandler.OrquestrateRetrieval(services2.ToList(), param, inputType).Result;
 
             Assert.IsNotNull(response);
 
@@ -44,7 +44,7 @@ namespace IpAddressDataRetriever.Services.DataRetrievers.Tests
             string[] services3 = { "dnslookup", "revsednslookup", "domainilability", "geoip", "ipaddress", "ping", "whoi", "rdap" };
             inputType = InputTypes.IpAddressv4;
 
-            response = DataRetrieverOrchestrator.OrquestrateRetrieval(services3.ToList(), param, inputType).Result;
+            response = DataRetrievingOrchestrationHandler.OrquestrateRetrieval(services3.ToList(), param, inputType).Result;
 
             Assert.IsNotNull(response);
 
@@ -53,7 +53,7 @@ namespace IpAddressDataRetriever.Services.DataRetrievers.Tests
             string[] services4 = { "slookup", "revseslookup", "doinilability", "eoip" };
             inputType = InputTypes.IpAddressv4;
 
-            response = DataRetrieverOrchestrator.OrquestrateRetrieval(services4.ToList(), param, inputType).Result;
+            response = DataRetrievingOrchestrationHandler.OrquestrateRetrieval(services4.ToList(), param, inputType).Result;
 
             Assert.IsNotNull(response);
 
@@ -62,7 +62,7 @@ namespace IpAddressDataRetriever.Services.DataRetrievers.Tests
             string[] services5 = { };
             inputType = InputTypes.Invalid;
 
-            response = DataRetrieverOrchestrator.OrquestrateRetrieval(services5.ToList(), param, inputType).Result;
+            response = DataRetrievingOrchestrationHandler.OrquestrateRetrieval(services5.ToList(), param, inputType).Result;
 
             Assert.IsNotNull(response);
         }

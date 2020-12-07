@@ -1,6 +1,6 @@
 ﻿using IpAddressDataRetriever.API.Handlers;
 using IpAddressDataRetriever.API.Models.POCO;
-using IpAddressDataRetriever.Services.DataRetrievers;
+using IpAddressDataRetriever.Services.DataRetrievers.Handlers;
 using IpAddressDataRetriever.Services.Validators;
 using IpAddressDataRetriever.Services.Values;
 using Microsoft.AspNetCore.Authorization;
@@ -66,7 +66,7 @@ namespace IpAddressDataRetriever.API.Controllers
                     List<Task<JObject>> workerTasks = new List<Task<JObject>>();
 
                     //Now will define the chunks, if master will be used then workers are incresed by 1 to make the calculations
-                    requestChuncks = LoadBalancer.SplitServices(services.ToList(), useMasterAsWorker ? WorkersCount +1 : WorkersCount, useMasterAsWorker);
+                    requestChuncks = LoadBalancingHandler.SplitServices(services.ToList(), useMasterAsWorker ? WorkersCount +1 : WorkersCount, useMasterAsWorker);
 
                     //If worked was splitted successfully, it's time to process each chunk of services
                     if (requestChuncks?.Count > 0)
@@ -75,7 +75,7 @@ namespace IpAddressDataRetriever.API.Controllers
                         if (useMasterAsWorker)
                         {
                             //Now will create the own task to process its own chunk
-                            workerTasks.Add(DataRetrieverOrchestrator.OrquestrateRetrieval(requestChuncks.ElementAt(requestChuncks.Count - 1).Services.ToList(), ipOrDomain, inputType));
+                            workerTasks.Add(DataRetrievingOrchestrationHandler.OrquestrateRetrieval(requestChuncks.ElementAt(requestChuncks.Count - 1).Services.ToList(), ipOrDomain, inputType));
 
                             requestChuncks.RemoveAt(requestChuncks.Count - 1);
                         }

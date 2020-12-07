@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Threading.Tasks;
 
-namespace IpAddressDataRetriever.Services.DataRetrievers
+namespace IpAddressDataRetriever.Services.DataRetrievers.Handlers
 {
     public static class DataRetrievingHandler
     {

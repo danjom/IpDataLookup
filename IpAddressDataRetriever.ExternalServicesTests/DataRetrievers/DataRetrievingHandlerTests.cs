@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using IpAddressDataRetriever.Services.DataRetrievers;
+using IpAddressDataRetriever.Services.DataRetrievers.Handlers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

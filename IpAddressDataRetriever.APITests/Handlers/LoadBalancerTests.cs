@@ -25,7 +25,7 @@ namespace IpAddressDataRetriever.API.Handlers.Tests
             masterIncluded = false;
             string[] services1 = { "geoip", "domainavailability" };
 
-            response = LoadBalancer.SplitServices(services1.ToList(), workersCount, masterIncluded);
+            response = LoadBalancingHandler.SplitServices(services1.ToList(), workersCount, masterIncluded);
 
             Assert.IsNotNull(response);
             Assert.AreEqual(2, response?.Count);
@@ -37,7 +37,7 @@ namespace IpAddressDataRetriever.API.Handlers.Tests
             masterIncluded = true;
             string[] services2 = { "dnslookup", "reversednslookup", "domainavailability", "geoip", "ipaddress", "ping", "whois", "rdap" };
 
-            response = LoadBalancer.SplitServices(services2.ToList(), workersCount, masterIncluded);
+            response = LoadBalancingHandler.SplitServices(services2.ToList(), workersCount, masterIncluded);
 
             Assert.IsNotNull(response);
             Assert.AreEqual(3, response?.Count);
@@ -48,7 +48,7 @@ namespace IpAddressDataRetriever.API.Handlers.Tests
             masterIncluded = true;
             string[] services3 = { "dnslookup", "reversednslookup", "domainavailability" };
 
-            response = LoadBalancer.SplitServices(services3.ToList(), workersCount, masterIncluded);
+            response = LoadBalancingHandler.SplitServices(services3.ToList(), workersCount, masterIncluded);
 
             Assert.IsNotNull(response);
             Assert.AreEqual(3, response?.Count);
@@ -59,7 +59,7 @@ namespace IpAddressDataRetriever.API.Handlers.Tests
             masterIncluded = false;
             string[] services4 = { "dnslookup", "reversednslookup", "domainavailability" };
 
-            response = LoadBalancer.SplitServices(services4.ToList(), workersCount, masterIncluded);
+            response = LoadBalancingHandler.SplitServices(services4.ToList(), workersCount, masterIncluded);
 
             Assert.IsNotNull(response);
             Assert.AreEqual(0, response?.Count);
@@ -69,7 +69,7 @@ namespace IpAddressDataRetriever.API.Handlers.Tests
             masterIncluded = false;
             string[] services5 = { };
 
-            response = LoadBalancer.SplitServices(services5.ToList(), workersCount, masterIncluded);
+            response = LoadBalancingHandler.SplitServices(services5.ToList(), workersCount, masterIncluded);
 
             Assert.IsNotNull(response);
             Assert.AreEqual(0, response?.Count);

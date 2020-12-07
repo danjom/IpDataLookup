@@ -31,7 +31,7 @@ namespace IpAddressDataRetriever.API.Handlers.Tests
             masterIncluded = false;
             string[] services1 = { "geoip", "domainavailability" };
 
-            input = LoadBalancer.SplitServices(services1.ToList(), workersCount, masterIncluded);
+            input = LoadBalancingHandler.SplitServices(services1.ToList(), workersCount, masterIncluded);
 
             response = DistributedWorkersHandler.RetrieveDataFromWorkerAsync(input, param, workersCount, inputType).Result;
 
@@ -44,7 +44,7 @@ namespace IpAddressDataRetriever.API.Handlers.Tests
             masterIncluded = true;
             string[] services2 = { "dnslookup", "reversednslookup", "domainavailability", "geoip", "ipaddress", "ping", "whois", "rdap" };
 
-            input = LoadBalancer.SplitServices(services2.ToList(), workersCount, masterIncluded);
+            input = LoadBalancingHandler.SplitServices(services2.ToList(), workersCount, masterIncluded);
 
             response = DistributedWorkersHandler.RetrieveDataFromWorkerAsync(input.GetRange(0, workersCount - 1), param, workersCount - 1, inputType).Result;
 
@@ -57,7 +57,7 @@ namespace IpAddressDataRetriever.API.Handlers.Tests
             masterIncluded = true;
             string[] services3 = { "dnslookup", "reversednslookup", "domainavailability" };
 
-            input = LoadBalancer.SplitServices(services3.ToList(), workersCount, masterIncluded);
+            input = LoadBalancingHandler.SplitServices(services3.ToList(), workersCount, masterIncluded);
 
             response = DistributedWorkersHandler.RetrieveDataFromWorkerAsync(input, param, input?.Count ?? 0, inputType).Result;
 
@@ -70,7 +70,7 @@ namespace IpAddressDataRetriever.API.Handlers.Tests
             masterIncluded = false;
             string[] services4 = { "dnslookup", "reversednslookup", "domainavailability" };
 
-            input = LoadBalancer.SplitServices(services4.ToList(), workersCount, masterIncluded);
+            input = LoadBalancingHandler.SplitServices(services4.ToList(), workersCount, masterIncluded);
 
             response = DistributedWorkersHandler.RetrieveDataFromWorkerAsync(input, param, 0, inputType).Result;
 
@@ -83,7 +83,7 @@ namespace IpAddressDataRetriever.API.Handlers.Tests
             masterIncluded = false;
             string[] services5 = { };
 
-            input = LoadBalancer.SplitServices(services5.ToList(), workersCount, masterIncluded);
+            input = LoadBalancingHandler.SplitServices(services5.ToList(), workersCount, masterIncluded);
 
             response = DistributedWorkersHandler.RetrieveDataFromWorkerAsync(input, param, workersCount, inputType).Result;
 
