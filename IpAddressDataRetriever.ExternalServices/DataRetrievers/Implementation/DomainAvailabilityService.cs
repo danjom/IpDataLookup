@@ -26,19 +26,19 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
 
                     if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
                     {
-                        retrievedData.Add("Domain Availability", JObject.Parse(result.ResponseBody).GetValue("DomainInfo"));
+                        retrievedData.Add("domainAvailability", JObject.Parse(result.ResponseBody).GetValue("DomainInfo"));
 
                     }
                     else
                     {
-                        retrievedData.Add("Domain Availability", "Unable to retrieve availability data");
+                        retrievedData.Add("domainAvailability", "Unable to retrieve availability data");
                     }
                 }
                 else
                 {
                     if (inputType == InputTypes.IpAddressv4 || inputType == InputTypes.IpAddressv6)
                     {
-                        retrievedData.Add("Domain Availability", "IpOrDomain param is an IP Address, Domain Availability is unavailable for such value");
+                        retrievedData.Add("domainAvailability", "IpOrDomain param is an IP Address, Domain Availability is unavailable for such value");
                     }
                 }
             }

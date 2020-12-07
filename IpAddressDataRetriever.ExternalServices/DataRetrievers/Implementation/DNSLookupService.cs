@@ -26,19 +26,19 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
 
                     if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
                     {
-                        retrievedData.Add("DNS Lookup", JObject.Parse(result.ResponseBody).GetValue("DNSData"));
+                        retrievedData.Add("dnsLookup", JObject.Parse(result.ResponseBody).GetValue("DNSData"));
 
                     }
                     else
                     {
-                        retrievedData.Add("DNS Lookup", "Service not available");
+                        retrievedData.Add("dnsLookup", "Service not available");
                     }
                 }
                 else
                 {
                     if (inputType == InputTypes.IpAddressv4 || inputType == InputTypes.IpAddressv6)
                     {
-                        retrievedData.Add("DNS Lookup", "IpOrDomain param is an IP Address, DNS Lookup is unavailable for such value");
+                        retrievedData.Add("dnsLookup", "IpOrDomain param is an IP Address, DNS Lookup is unavailable for such value");
                     }
                 }
 

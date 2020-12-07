@@ -25,7 +25,7 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
                     {
                         string[] ips = hostEntry.Select(ip => ip.ToString()).ToArray();
 
-                        retrievedData.Add("IP Addresses", JArray.Parse(JsonConvert.SerializeObject(ips)));
+                        retrievedData.Add("ipAddresses", JArray.Parse(JsonConvert.SerializeObject(ips)));
                     }
 
                 }
@@ -35,7 +35,7 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
                     Console.WriteLine("Source : " + e.Source);
                     Console.WriteLine("Message : " + e.Message);
 
-                    retrievedData.Add("IP Addresses", "Unable to retrieve ip addresses data");
+                    retrievedData.Add("ipAddresses", "Unable to retrieve ip addresses data");
                 }
             }
 

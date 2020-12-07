@@ -28,19 +28,19 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
 
                     if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
                     {
-                        retrievedData.Add("Reverse DNS Lookup", JArray.Parse(JsonConvert.SerializeObject(JObject.Parse(result.ResponseBody).GetValue("result"))));
+                        retrievedData.Add("reverseDnsLookup", JArray.Parse(JsonConvert.SerializeObject(JObject.Parse(result.ResponseBody).GetValue("result"))));
 
                     }
                     else
                     {
-                        retrievedData.Add("Reverse DNS Lookup", "Unable to retrieve lookup data");
+                        retrievedData.Add("reverseDnsLookup", "Unable to retrieve lookup data");
                     }
                 }
                 else
                 {
                     if (inputType == InputTypes.DomainName)
                     {
-                        retrievedData.Add("Reverse DNS Lookup", "IpOrDomain param is a Domain Name, Reverse DNS Lookup is unavailable for such value");
+                        retrievedData.Add("reverseDnsLookup", "IpOrDomain param is a Domain Name, Reverse DNS Lookup is unavailable for such value");
                     }
                 }
             }

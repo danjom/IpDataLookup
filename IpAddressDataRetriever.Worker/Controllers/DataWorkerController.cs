@@ -19,7 +19,7 @@ namespace IpAddressDataRetriever.Worker.Controllers
     public class DataWorkerController : ControllerBase
     {
         //This is just for demo purposes, for a real product, the API Key generation and validation needs to be implemented
-        private static readonly string ApiKey = "xevUntljUUqoeankdKmnYFFqEXTGYEpi";
+        private static readonly string ApiKey = "qwbNVcIlkjMDBhZuUMUYVIrPUpcVd6IJ";
         //worker 1 xevUntljUUqoeankdKmnYFFqEXTGYEpi  -- worker 2 qwbNVcIlkjMDBhZuUMUYVIrPUpcVd6IJ 
 
         private readonly ILogger<DataWorkerController> _logger;

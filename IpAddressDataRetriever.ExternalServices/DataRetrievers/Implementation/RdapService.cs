@@ -32,19 +32,19 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
 
                     if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
                     {
-                        retrievedData.Add("RDAP", JObject.Parse(result.ResponseBody));
+                        retrievedData.Add("rdap", JObject.Parse(result.ResponseBody));
 
                     }
                     else
                     {
-                        retrievedData.Add("RDAP", "Unable to retrieve RDAP data");
+                        retrievedData.Add("rdap", "Unable to retrieve RDAP data");
                     }
                 }
                 else
                 {
                     if (inputType == InputTypes.IpAddressv4 || inputType == InputTypes.IpAddressv6)
                     {
-                        retrievedData.Add("RDAP", "IpOrDomain param is an IP Address, RDAP is unavailable for such value");
+                        retrievedData.Add("rdap", "IpOrDomain param is an IP Address, RDAP is unavailable for such value");
                     }
                 }
             }

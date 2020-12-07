@@ -37,7 +37,8 @@ namespace IpAddressDataRetriever.API.Handlers
 
                     for (int i = 0; i < workingChunks?.Count; ++i)
                     {
-                        string uri = externalWorkersUris[i % workersCount] + "&inputType=" + inputType + "&ipOrDomain=" + ipOrDomain + "&services=" + string.Join("&services=", workingChunks[i].Services);
+                        //Just to check the Uri is correctly built
+                        //string uri = externalWorkersUris[i % workersCount] + "&inputType=" + inputType + "&ipOrDomain=" + ipOrDomain + "&services=" + string.Join("&services=", workingChunks[i].Services);
 
                         httpResponseTasks.Add(client.GetAsync(externalWorkersUris[i % workersCount] + "&inputType=" + inputType + "&ipOrDomain=" + ipOrDomain + "&services=" + string.Join("&services=", workingChunks[i].Services)));
                     }

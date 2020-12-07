@@ -32,12 +32,12 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
 
                 if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
                 {
-                    retrievedData.Add("Geo IP", JObject.Parse(result.ResponseBody));
+                    retrievedData.Add("geoIp", JObject.Parse(result.ResponseBody));
 
                 }
                 else
                 {
-                    retrievedData.Add("Geo Data", "Unable to retrieve geodata");
+                    retrievedData.Add("geoIp", "Unable to retrieve geodata");
                 }
             }
             

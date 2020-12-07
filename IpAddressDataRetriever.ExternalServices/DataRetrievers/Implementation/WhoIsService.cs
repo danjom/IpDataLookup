@@ -22,12 +22,12 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
 
                 if (result.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(result.ResponseBody))
                 {
-                    retrievedData.Add("WhoIs", JObject.Parse(result.ResponseBody).GetValue("WhoisRecord"));
+                    retrievedData.Add("whoIs", JObject.Parse(result.ResponseBody).GetValue("WhoisRecord"));
 
                 }
                 else
                 {
-                    retrievedData.Add("WhoIs", "Unable to retrieve ownership data");
+                    retrievedData.Add("whoIs", "Unable to retrieve ownership data");
                 }
             }
 

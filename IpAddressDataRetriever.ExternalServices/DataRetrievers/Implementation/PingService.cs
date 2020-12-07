@@ -47,7 +47,7 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
                         }
                     }
 
-                    retrievedData.Add("Ping Results", JArray.Parse(JsonConvert.SerializeObject(pingResponses)));
+                    retrievedData.Add("ping", JArray.Parse(JsonConvert.SerializeObject(pingResponses)));
 
 #endif
 
@@ -71,9 +71,9 @@ namespace IpAddressDataRetriever.Services.DataRetrivers.Implementation
                             var success = tcpClient.Connected;
 
                             if (success)
-                                retrievedData.Add("Ping Results", domainOrIp + " is Up and Running -- Limited Data because Azure don't allow ICMP packets to avoid DoS Attacks");
+                                retrievedData.Add("ping", domainOrIp + " is Up and Running -- Limited Data because Azure don't allow ICMP packets to avoid DoS Attacks");
                             else
-                                retrievedData.Add("Ping Results", domainOrIp + ": Unable to establish connection using TCP Client");
+                                retrievedData.Add("ping", domainOrIp + ": Unable to establish connection using TCP Client");
                         };
 
                     }
